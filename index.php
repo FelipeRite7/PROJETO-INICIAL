@@ -3,22 +3,12 @@
 
 require "src/conexao_bd.php";
 require "src/modelo/Produto.php";
-
-$sql1 = "SELECT * FROM serenatto_produtos WHERE tipo = 'Café' order by preco ";
-$statement = $pdo->query($sql1);
-$produtosCafe = $statement->fetchAll(PDO::FETCH_ASSOC);
+require "src/repositorio/produto_repositorio.php";
 
 
-$dadosCafe = array_map(function($cafe){
-    return new Produto($cafe['id'],
-    $cafe['tipo'],
-    $cafe['nome'],
-    $cafe['descricao'],
-    $cafe['imagem'],
-    $cafe['preco']
-);
-}, $produtosCafe);
-
+$produto_repositorio = new produtoRepositorio($pdo);
+$dadosCafe = $produto_repositorio->opcoesCafe();
+$dadosAlmoco = $produtosRepositorio->opcoesAlmoco();
 
 $sql2 = "SELECT * FROM serenatto_produtos WHERE tipo = 'Almoço' order by preco ";
 $statement = $pdo->query($sql2);
