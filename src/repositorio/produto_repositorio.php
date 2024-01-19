@@ -18,13 +18,14 @@ class ProdutoRepositorio
             $dados['tipo'],
             $dados['nome'],
             $dados['descricao'],
-            $dados['imagem'],
-            $dados['preco']);
+            $dados['preco'],
+            $dados['imagem']
+        );
     }
 
     public function opcoesCafe(): array
     {
-        $sql1 = "SELECT * FROM produtos WHERE tipo = 'Café' ORDER BY preco";
+        $sql1 = "SELECT * FROM serenatto_produtos WHERE tipo = 'Café' ORDER BY preco";
         $statement = $this->pdo->query($sql1);
         $produtosCafe = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -36,7 +37,7 @@ class ProdutoRepositorio
     }
     public function opcoesAlmoco(): array
     {
-        $sql2 = "SELECT * FROM produtos WHERE tipo = 'Almoço' ORDER BY preco";
+        $sql2 = "SELECT * FROM serenatto_produtos WHERE tipo = 'Almoço' ORDER BY preco";
         $statement = $this->pdo->query($sql2);
         $produtosAlmoco = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -49,32 +50,64 @@ class ProdutoRepositorio
 
     public function buscarTodos()
     {
-
         $sql = "SELECT * FROM serenatto_produtos ORDER BY preco";
         $statement = $this->pdo->query($sql);
-        $dados = $statement-> fetchAll(mode: PDO::FETCH_ASSOC);
+        $dados = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        $todososdados = array_map(function ($produto){
+        $todosOsDados = array_map(function ($produto){
             return $this->formarObjeto($produto);
         },$dados);
 
-        return $todososdados;
-
-
+        return $todosOsDados;
     }
 
     public function deletar(int $id)
     {
-
         $sql = "DELETE FROM serenatto_produtos WHERE id = ?";
         $statement = $this->pdo->prepare($sql);
-        $statement->bindValue(1, $id);
+        $statement->bindValue(1,$id);
         $statement->execute();
 
     }
 
 
+    public function salvar(Produto $produto)
+    {
+        $sql = "INSERT INTO serenatto_produtos (tipo, nome, descricao, preco, imagem) VALUES (?,?,?,?,?)";
+        $statement = $this->pdo->prepare($sql);
+        $statement->bindValue(1, $produto->getTipo());
+        $statement->bindValue(2, $produto->getNome());
+        $statement->bindValue(3, $produto->getDescricao());
+        $statement->bindValue(4,$produto->getPreco());
+        $statement->bindValue(5, $produto->getImagem());
+        $statement->execute();
+    }
+
+
+
+    public function buscar (int $id)
+    {
+        $sql = "SELECT * FROM serenatto_produtos where id = ?";
+        $statement = $this->pdo->prepare($sql);
+        $statement->bindValue(1,$id);
+        $statement->execute();
+
+        $dados = $statement->fetch(PDO::FETCH_ASSOC);
+
+        return $this->formarObjeto($dados);
+        }
+
+        public function atualizar(Produto $produto)
+{
+    $sql = "UPDATE serenatto_produtos SET tipo = ?, nome = ?, descricao = ?, preco = ?, imagem = ? WHERE id = ?";
+    $statement = $this->pdo->prepare($sql);
+    $statement->bindValue(1, $produto->getTipo());
+    $statement->bindValue(2, $produto->getNome());
+    $statement->bindValue(3, $produto->getDescricao());
+    $statement->bindValue(4, $produto->getPreco());
+    $statement->bindValue(5, $produto->getImagem());
+    $statement->bindValue(6, $produto->getId());
+    $statement->execute();
 }
 
-
-
+}

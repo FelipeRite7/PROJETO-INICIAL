@@ -8,22 +8,9 @@ require "src/repositorio/produto_repositorio.php";
 
 $produto_repositorio = new produtoRepositorio($pdo);
 $dadosCafe = $produto_repositorio->opcoesCafe();
-$dadosAlmoco = $produtosRepositorio->opcoesAlmoco();
-
-$sql2 = "SELECT * FROM serenatto_produtos WHERE tipo = 'Almoço' order by preco ";
-$statement = $pdo->query($sql2);
-$produtosAlmoco = $statement->fetchAll(PDO::FETCH_ASSOC);
+$dadosAlmoco = $produto_repositorio->opcoesAlmoco();
 
 
-$dadosAlmoco = array_map(function($almoco){
-    return new Produto($almoco['id'],
-    $almoco['tipo'],
-    $almoco['nome'],
-    $almoco['descricao'],
-    $almoco['imagem'],
-    $almoco['preco']
-);
-}, $produtosAlmoco);
 
 ?>
 
@@ -60,10 +47,10 @@ $dadosAlmoco = array_map(function($almoco){
                 <?php foreach ($dadosCafe as $cafe):?>
                     <div class="container-produto">
                         <div class="container-foto">
-                            <img src="<?= "img/".$cafe->getImagem() ?>">
+                            <img src="<?= $cafe->getImagemDiretorio() ?>">
                         </div>
-                        <p><?= $cafe->getNome() ?></p>
-                        <p><?= $cafe->getDescricao() ?></p>
+                        <p><?= $cafe->getNome()?></p>
+                        <p><?= $cafe->getDescricao()?></p>
                         <p><?= $cafe->getPrecoFormatado() ?></p>
                     </div>
                 <?php endforeach; ?>
@@ -78,10 +65,10 @@ $dadosAlmoco = array_map(function($almoco){
                 <?php foreach ($dadosAlmoco as $almoco):?>
                     <div class="container-produto">
                         <div class="container-foto">
-                            <img src="<?= "img/".$almoco->getImagem()?>">
+                            <img src="<?= $almoco->getImagemDiretorio()?>">
                         </div>
-                        <p><?= $almoco->getNome() ?></p>
-                        <p><?= $almoco->getDescricao() ?></p>
+                        <p><?= $almoco->getNome()?></p>
+                        <p><?= $almoco->getDescricao()?></p>
                         <p><?= $almoco->getPrecoFormatado() ?></p>
                     </div>
                 <?php endforeach; ?>
