@@ -1,13 +1,11 @@
 <?php
 
-require_once 'vendor/autoload.php';
+
+require "vendor/autoload.php";
 
 // reference the Dompdf namespace
 use Dompdf\Dompdf;
-
 $dompdf = new Dompdf();
-
-
 ob_start();
 require "conteudo-pdf.php";
 $html = ob_get_clean();
@@ -22,3 +20,4 @@ $dompdf->render();
 
 // Output the generated PDF to Browser
 $dompdf->stream();
+
